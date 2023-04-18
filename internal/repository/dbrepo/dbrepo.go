@@ -10,7 +10,7 @@ import (
 	_ "github.com/jackc/pgconn"
 	_ "github.com/jackc/pgx/v5"
 	_ "github.com/jackc/pgx/v5/stdlib"
-
+"github.com/joho/godotenv"
 	"github.com/Reticent93/awesomeBanking/helpers"
 	"github.com/Reticent93/awesomeBanking/internal/models"
 	"github.com/Reticent93/awesomeBanking/internal/repository"
@@ -37,13 +37,20 @@ var app application
 
 
 func NewDatabase() (*sql.DB, error) {
-	PGHOST := os.Getenv("PGHOST")
-	PGPORT := os.Getenv("PGPORT")
-	PGUSER := os.Getenv("PGUSER")
-	PGPASS := os.Getenv("PGPASS")
-	PGNAME := os.Getenv("PGNAME")
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	  }
 
-	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", PGHOST, PGPORT, PGUSER, PGPASS, PGNAME)
+	PG_HOST := os.Getenv("PG_HOST")
+	PG_PORT := os.Getenv("PG_PORT")
+	PG_NAME := os.Getenv("PG_NAME")
+	PG_USER := os.Getenv("PG_USER")
+	PG_PASS := os.Getenv("PG_PASS")
+
+	  
+	log.Println("Connecting to database...")
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", PG_HOST, PG_PORT,PG_USER, PG_PASS, PG_NAME  )
 
 	db, err := sql.Open("pgx", connStr)
 	if err != nil {
