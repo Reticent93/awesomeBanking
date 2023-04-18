@@ -1,9 +1,9 @@
-package main
+package helpers
 
 
 func HandleErr(err error) {
 	if err != nil {
-		panic(err)
+		panic(err.Error())
 	}
 }
 
